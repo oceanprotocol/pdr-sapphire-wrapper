@@ -67,6 +67,9 @@ func SendETHTransaction(keyHexC *C.char, myAddrC *C.char, toAddrC *C.char, rpcUr
 	var encryptedData []byte
 	if datahex == "" {
 		data = nil
+		if logLevel == "DEBUG" {
+			fmt.Println("Transaction data is empty")
+		}
 	} else {
 		// remove 0x if it exists
 		if datahex[:2] == "0x" {
