@@ -64,6 +64,7 @@ func SendETHTransaction(keyHexC *C.char, myAddrC *C.char, toAddrC *C.char, rpcUr
 	}
 
 	var data []byte
+	var encryptedData []byte
 	if datahex == "" {
 		data = nil
 	} else {
