@@ -19,6 +19,7 @@ import (
 import (
 	"encoding/hex"
 	"fmt"
+	"os"
 )
 
 //export SendETHTransaction
@@ -32,6 +33,7 @@ func SendETHTransaction(keyHexC *C.char, myAddrC *C.char, toAddrC *C.char, rpcUr
 	gasCostGwei := uint64(gasCostGweiC)
 	nonce := uint64(nonceC)
 	var gasPrice *big.Int
+	logLevel := os.Getenv("LOGLEVEL")
 
 	value := big.NewInt(int64(valueC))
 	value = value.Mul(value, big.NewInt(1000000000)) // convert gwei to wei
@@ -69,13 +71,25 @@ func SendETHTransaction(keyHexC *C.char, myAddrC *C.char, toAddrC *C.char, rpcUr
 		if datahex[:2] == "0x" {
 			datahex = datahex[2:]
 		}
-
+		if logLevel == "DEBUG" {
+			fmt.Println("Transaction data hex:", datahex)
+		}
 		data, err = hex.DecodeString(datahex)
 		if err != nil {
 			return -42, nil
 		}
-		cipher, _ := sapphire.NewCipher(chainId.Uint64())
-		data = cipher.EncryptEncode(data)
+		if logLevel == "DEBUG" {
+			fmt.Println("Decoded data:", data)
+		}
+		cipher, err := sapphire.NewCipher(chainId.Uint64())
+		if err != nil {
+			fmt.Println("Error creating cipher:", err)
+			return 99, nil
+		}
+		encryptedData = cipher.EncryptEncode(data)
+		if logLevel == "DEBUG" {
+			fmt.Println("Encrypted data:", encryptedData)
+		}
 	}
 
 	if gasCostGwei == 0 {
@@ -94,7 +108,7 @@ func SendETHTransaction(keyHexC *C.char, myAddrC *C.char, toAddrC *C.char, rpcUr
 			Nonce:    nonce,
 			To:       &toAddr,
 			Value:    value,
-			Data:     data,
+			Data:     encryptedData,
 			Gas:      gasLimit,
 			GasPrice: gasPrice,
 		},
