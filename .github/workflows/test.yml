@@ -103,31 +103,31 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Download built library - Linux
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: sapphirewrapper-linux-amd64
           path: ./bin/
 
       - name: Download built library - Darwin amd64
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: sapphirewrapper-darwin-amd64
           path: ./bin/
 
       - name: Download built library - Darwin arm64
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: sapphirewrapper-darwin-arm64
           path: ./bin/
 
       - name: Download built library - Linux arm64
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: sapphirewrapper-linux-arm64
           path: ./bin/
 
       - name: Download built library - Windows amd64
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: sapphirewrapper-windows-amd64
           path: ./bin/
